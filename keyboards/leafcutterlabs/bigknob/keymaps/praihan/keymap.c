@@ -24,7 +24,7 @@
 // #define TAP_CODE_DELAY 50
 // #define tap_code(keycode) tap_code_delay(keycode, TAP_CODE_DELAY)
 
-void encoder_update_user(uint8_t index, bool clockwise) {
+bool encoder_update_user(uint8_t index, bool clockwise) {
   if (index == 0) {
     if (clockwise ^ REVERSE_ROTARY) {
       tap_code(KC_VOLU);
@@ -32,6 +32,7 @@ void encoder_update_user(uint8_t index, bool clockwise) {
       tap_code(KC_VOLD);
     }
   }
+  return true;
 }
 
 enum custom_keycodes {
@@ -44,8 +45,8 @@ enum custom_keycodes {
 static void send_kvm_command(uint16_t custom_keycode) {
   uint16_t key_index = custom_keycode - CUSTOM_KC_1;
   tap_code(KC_SCROLLLOCK);
-  tap_code(KC_SCROLLLOCK);
-  tap_code(KC_1 + key_index);
+  tap_code_delay(KC_SCROLLLOCK, 50);
+  tap_code_delay(KC_1 + key_index, 100);
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
